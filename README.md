@@ -442,3 +442,10 @@ router.get('/home/:id/:name', async(ctx, next)=>{
 当用 `post` 方式请求时，我们会遇到一个问题：`post` 请求通常都会通过表单或 `JSON` 形式发送，而无论是 `Node` 还是 `Koa`，都 **没有提供** 解析 `post` 请求参数的功能。 koa-bodyparser就是这样的一个工具。
 
 插件安装：`npm i koa-bodyparser -S`
+
+
+
+## 0500 refactoring
+
+目前，整个示例中所有的代码都写在 `app.js` 中。然而在业务代码持续增大，场景更加复杂的情况下，这种做法无论是对后期维护不是好事。所以我们现在要做的就是：分离。
+
