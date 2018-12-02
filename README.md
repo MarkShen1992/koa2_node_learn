@@ -374,3 +374,71 @@ router.get('/:category/:title', function (ctx, next) {
 ```
 
 通过上面的例子可以看出，我们可以通过 `ctx.params` 去访问路由中的参数，使得我们能够对参数做一些处理后再执行后续的代码。 
+
+
+
+## 0400 Http Request
+
+数据传递过来的方式一般有三种 :
+
+### put the parameters behind the URL
+
+```js
+http://localhost:3000/home?id=12&name=ikcamp
+```
+
+`koa-router` 封装的 `request` 对象，里面的 `query` 方法或 `querystring` 方法可以直接获取到 `Get` 请求的数据，唯一不同的是 `query` 返回的是对象，而 `querystring` 返回的是字符串。 
+
+```js
+const Koa = require('koa')
+  const router = require('koa-router')()
+  const app = new Koa()
+
+  router.get('/', async(ctx, next) => {
+    ctx.response.body = `<h1>index page</h1>`
+  })
+
+  router.get('/home', async(ctx, next) => {
+    console.log(ctx.request.query)
+    console.log(ctx.request.querystring)
+    ctx.response.body = '<h1>HOME page</h1>'
+  })
+
+  router.get('/404', async(ctx, next) => {
+    ctx.response.body = '<h1>404 Not Found</h1>'
+  })
+
+  // add router middleware:
+  app.use(router.routes())
+
+  app.listen(3000, () => {
+    console.log('server is running at http://localhost:3000')
+  })
+
+/** 运行结果
+    { id: '12', name: 'ikcamp' }
+    id=12&name=ikcamp
+*/
+```
+
+### put the parameter in the middle of URL
+
+```js
+// http://localhost:3000/home/12/ikcamp
+
+// 增加如下代码
+router.get('/home/:id/:name', async(ctx, next)=>{
+    console.log(ctx.params)
+    ctx.response.body = '<h1>HOME page /:id/:name</h1>'
+})
+
+/** 结果
+	{ id: '12', name: 'ikcamp' }
+*/
+```
+
+### put the parameter in the body
+
+当用 `post` 方式请求时，我们会遇到一个问题：`post` 请求通常都会通过表单或 `JSON` 形式发送，而无论是 `Node` 还是 `Koa`，都 **没有提供** 解析 `post` 请求参数的功能。 koa-bodyparser就是这样的一个工具。
+
+插件安装：`npm i koa-bodyparser -S`
