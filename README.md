@@ -449,3 +449,10 @@ router.get('/home/:id/:name', async(ctx, next)=>{
 
 目前，整个示例中所有的代码都写在 `app.js` 中。然而在业务代码持续增大，场景更加复杂的情况下，这种做法无论是对后期维护不是好事。所以我们现在要做的就是：分离。
 
+分离原则：
+
+​	router: 将请求转发到某具体的Controller处理
+
+​	controller: 做check，完成后调用service层处理
+
+​	service：具体业务处理
